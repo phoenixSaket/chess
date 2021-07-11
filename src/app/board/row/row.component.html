@@ -1,0 +1,7 @@
+<div class="row shadow" >
+    <div class="tile" *ngFor="let c of pos;">
+        <div class="inner-tile" [ngClass]="c.white ? 'white' : 'black'">
+            <img *ngIf="c.isVisible" class="piece" [src]="c.imageSrc" [alt]="c.piece">
+        </div>
+    </div>
+</div>
