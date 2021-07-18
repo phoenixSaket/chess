@@ -25,7 +25,10 @@ export class RowComponent implements OnInit {
           'white': white ? true : false,
           'isVisible': false,
           'imageSrc': '',
-          'piece': ''
+          'piece': '',
+          'isError': false,
+          'isSelected': false,
+          'hasPawnMoved2': false
         });
       }
     }
@@ -142,6 +145,88 @@ export class RowComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // tile represents the tile you want to move to 
+    // selectedTile represents the tile which has been selected and has some piece in it
+
   }
 
+  selectTile(tile) {
+    console.log(tile);
+
+
+    let isSelected = false;
+    let selectedPiece;
+
+    for (let i = 0; i < this.pos.length; i++) {
+      if (this.pos[i].isSelected == true) {
+        isSelected = true;
+        selectedPiece = this.pos[i];
+        break;
+      }
+    }
+
+    if (!isSelected) {
+      for (let i = 0; i < this.pos.length; i++) {
+        this.pos[i].isError = false;
+        this.pos[i].isSelected = false;
+      }
+
+      if (tile.isVisible) {
+        tile.isError = false;
+        tile.isSelected = true;
+      } else {
+        tile.isError = true;
+      }
+    }
+
+    switch (selectedPiece?.piece) {
+      case "black pawn":
+        if ((selectedPiece.coordinates.x === tile.coordinates.x) && (tile.coordinates.y <= selectedPiece.coordinates.y + (selectedPiece.hasPawnMoved2 ? 1 : 2)) && (tile.coordinates.y > selectedPiece.coordinates.y) && !tile.isVisible) {
+          this.move(selectedPiece, tile, selectedPiece.imageSrc);
+        }
+        break;
+      case "white pawn":
+        if ((selectedPiece.coordinates.x === tile.coordinates.x) && (tile.coordinates.y + (selectedPiece.hasPawnMoved2 ? 1 : 2) >= selectedPiece.coordinates.y) && (tile.coordinates.y < selectedPiece.coordinates.y) && !tile.isVisible) {
+          this.move(selectedPiece, tile, selectedPiece.imageSrc);
+        }
+        break;
+      case "black rooke":
+        if ((selectedPiece.coordinates.x == tile.coordinates.x || selectedPiece.coordinates.y == tile.coordinates.y) && (!tile.isVisible)) {
+          this.move(selectedPiece, tile, selectedPiece.imageSrc)
+        }
+        break;
+      case "white rooke":
+        if ((selectedPiece.coordinates.x == tile.coordinates.x || selectedPiece.coordinates.y == tile.coordinates.y) && (!tile.isVisible)) {
+          this.move(selectedPiece, tile, selectedPiece.imageSrc)
+        }
+        break;
+      
+
+    }
+
+    if (tile === selectedPiece) {
+      for (let i = 0; i < this.pos.length; i++) {
+        if (this.pos[i].isSelected == true) {
+          isSelected = false;
+          this.pos[i].isSelected = false;
+          selectedPiece = {};
+          break;
+        }
+      }
+    }
+  }
+
+  move(selectedPiece, tile, img) {
+
+    if (selectedPiece.piece.includes('pawn')) {
+      tile.hasPawnMoved2 = true;
+    }
+    selectedPiece.isVisible = false;
+    selectedPiece.imageSrc = "";
+    selectedPiece.isSelected = false;
+    tile.isVisible = true;
+    tile.imageSrc = img;
+    tile.piece = selectedPiece.piece;
+    selectedPiece.piece = "";
+  }
 }

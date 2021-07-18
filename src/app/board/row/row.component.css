@@ -17,14 +17,22 @@
 }
 
 .white {
-    background-color: #EEEED5;
+    background-color: #eed6bc;
 }
 
 .black {
-    background-color: #7D945D;
+    background-color: #c2734c;
 }
 
 .piece {
     width: 95%;
     height: 95%;
+}
+
+.invalid {
+    background-color: tomato;
+}
+
+.valid {
+    background-color: #51d3d3b0;
 }
